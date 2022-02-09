@@ -42,6 +42,10 @@ module.exports = {
       url: '/#awards',
     },
     {
+      name: 'Publications',
+      url: '/#publications',
+    },
+    {
       name: 'Contact',
       url: '/#contact',
     },
