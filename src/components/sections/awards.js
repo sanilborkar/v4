@@ -6,6 +6,8 @@ import { srConfig } from '@config';
 import sr from '@utils/sr';
 import { Icon } from '@components/icons';
 import { usePrefersReducedMotion } from '@hooks';
+import { BLOCKS } from '@contentful/rich-text-types';
+import { renderRichText } from 'gatsby-source-contentful/rich-text';
 
 const StyledAwardsSection = styled.section`
   display: flex;
@@ -165,22 +167,16 @@ const StyledAward = styled.li`
 const Awards = () => {
   const data = useStaticQuery(graphql`
     query {
-      awards: allMarkdownRemark(
-        filter: {
-          fileAbsolutePath: { regex: "/awards/" }
-          frontmatter: { showInAwards: { ne: false } }
-        }
-        sort: { fields: [frontmatter___date], order: DESC }
-      ) {
+      awards: allContentfulAwards(sort: { fields: date, order: DESC }) {
         edges {
           node {
-            frontmatter {
-              title
-              company
-              abstract
-              tech
+            title
+            company
+            tech
+            date
+            description {
+              raw
             }
-            html
           }
         }
       }
@@ -203,14 +199,22 @@ const Awards = () => {
     revealAwards.current.forEach((ref, i) => sr.reveal(ref, srConfig(i * 100)));
   }, []);
 
+  const options = {
+    renderNode: {
+      // eslint-disable-next-line react/display-name
+      [BLOCKS.PARAGRAPH]: (node, children) => (
+        <div className="award-description" dangerouslySetInnerHTML={{ __html: children }} />
+      ),
+    },
+  };
+
   const GRID_LIMIT = 6;
   const awards = data.awards.edges.filter(({ node }) => node);
   const firstSix = awards.slice(0, GRID_LIMIT);
   const awardsToShow = showMore ? awards : firstSix;
 
   const awardInner = node => {
-    const { frontmatter, html } = node;
-    const { title, company, tech } = frontmatter;
+    const { title, company, tech, description } = node;
     const github = '';
     const external = '';
 
@@ -241,14 +245,13 @@ const Awards = () => {
           </div>
 
           <h3 className="award-title">
-            {/* {title} */}
             <a href={external} target="_blank" rel="noreferrer">
               {title}
             </a>
           </h3>
           <p className="award-company">{company}</p>
 
-          <div className="award-description" dangerouslySetInnerHTML={{ __html: html }} />
+          {renderRichText(description, options)}
         </header>
 
         <footer>

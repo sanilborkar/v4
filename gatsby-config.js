@@ -1,4 +1,7 @@
 const config = require('./src/config');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 module.exports = {
   siteMetadata: {
@@ -155,5 +158,13 @@ module.exports = {
         trackingId: 'UA-45666519-2',
       },
     },
+    {
+      resolve: `gatsby-source-contentful`,
+      options: {
+        spaceId: process.env.CONTENTFUL_SPACE_ID,
+        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+      },
+    },
+    `@contentful/rich-text-react-renderer`,
   ],
 };
