@@ -167,22 +167,21 @@ const StyledProject = styled.li`
 const Projects = () => {
   const data = useStaticQuery(graphql`
     query {
-      projects: allMarkdownRemark(
-        filter: {
-          fileAbsolutePath: { regex: "/projects/" }
-          frontmatter: { showInProjects: { ne: false } }
-        }
-        sort: { fields: [frontmatter___date], order: DESC }
+      projects: allContentfulProject(
+        sort: { fields: date, order: DESC }
+        filter: { featured: { eq: false } }
       ) {
         edges {
           node {
-            frontmatter {
-              title
-              tech
-              github
-              external
+            title
+            tech
+            source
+            link
+            abstract {
+              childMarkdownRemark {
+                html
+              }
             }
-            html
           }
         }
       }
@@ -211,8 +210,7 @@ const Projects = () => {
   const projectsToShow = showMore ? projects : firstSix;
 
   const projectInner = node => {
-    const { frontmatter, html } = node;
-    const { github, external, title, tech } = frontmatter;
+    const { title, abstract, tech, source, link } = node;
 
     return (
       <div className="project-inner">
@@ -222,14 +220,14 @@ const Projects = () => {
               <Icon name="Folder" />
             </div>
             <div className="project-links">
-              {github && (
-                <a href={github} aria-label="GitHub Link" target="_blank" rel="noreferrer">
+              {source && (
+                <a href={source} aria-label="GitHub Link" target="_blank" rel="noreferrer">
                   <Icon name="GitHub" />
                 </a>
               )}
-              {external && (
+              {link && (
                 <a
-                  href={external}
+                  href={link}
                   aria-label="External Link"
                   className="external"
                   target="_blank"
@@ -241,12 +239,15 @@ const Projects = () => {
           </div>
 
           <h3 className="project-title">
-            <a href={external} target="_blank" rel="noreferrer">
+            <a href={link} target="_blank" rel="noreferrer">
               {title}
             </a>
           </h3>
 
-          <div className="project-description" dangerouslySetInnerHTML={{ __html: html }} />
+          <div
+            className="project-description"
+            dangerouslySetInnerHTML={{ __html: abstract.childMarkdownRemark.html }}
+          />
         </header>
 
         <footer>

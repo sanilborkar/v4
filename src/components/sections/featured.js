@@ -305,26 +305,25 @@ const StyledProject = styled.li`
 
 const Featured = () => {
   const data = useStaticQuery(graphql`
-    {
-      featured: allMarkdownRemark(
-        filter: { fileAbsolutePath: { regex: "/featured/" } }
-        sort: { fields: [frontmatter___date], order: ASC }
+    query {
+      featured: allContentfulProject(
+        sort: { fields: date, order: DESC }
+        filter: { featured: { eq: true } }
       ) {
         edges {
           node {
-            frontmatter {
-              title
-              cover {
-                childImageSharp {
-                  gatsbyImageData(width: 700, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
-                }
+            title
+            tech
+            source
+            link
+            abstract {
+              childMarkdownRemark {
+                html
               }
-              tech
-              github
-              external
-              cta
             }
-            html
+            cover {
+              gatsbyImageData(width: 700, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
+            }
           }
         }
       }
@@ -354,8 +353,8 @@ const Featured = () => {
       <StyledProjectsGrid>
         {featuredProjects &&
           featuredProjects.map(({ node }, i) => {
-            const { frontmatter, html } = node;
-            const { external, title, tech, github, cover, cta } = frontmatter;
+            const { title, abstract, tech, source, link, cover } = node;
+            const cta = false;
             const image = getImage(cover);
 
             return (
@@ -365,12 +364,12 @@ const Featured = () => {
                     <p className="project-overline">Featured Project</p>
 
                     <h3 className="project-title">
-                      <a href={external}>{title}</a>
+                      <a href={link}>{title}</a>
                     </h3>
 
                     <div
                       className="project-description"
-                      dangerouslySetInnerHTML={{ __html: html }}
+                      dangerouslySetInnerHTML={{ __html: abstract.childMarkdownRemark.html }}
                     />
 
                     {tech.length && (
@@ -387,13 +386,13 @@ const Featured = () => {
                           Learn More
                         </a>
                       )}
-                      {github && (
-                        <a href={github} aria-label="GitHub Link">
+                      {source && (
+                        <a href={source} aria-label="GitHub Link">
                           <Icon name="GitHub" />
                         </a>
                       )}
-                      {external && !cta && (
-                        <a href={external} aria-label="External Link" className="external">
+                      {link && !cta && (
+                        <a href={link} aria-label="External Link" className="external">
                           <Icon name="External" />
                         </a>
                       )}
@@ -402,7 +401,7 @@ const Featured = () => {
                 </div>
 
                 <div className="project-image">
-                  <a href={external ? external : github ? github : '#'}>
+                  <a href={link ? link : source ? source : '#'}>
                     <GatsbyImage image={image} alt={title} className="img" />
                   </a>
                 </div>
