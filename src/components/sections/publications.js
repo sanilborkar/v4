@@ -159,22 +159,20 @@ const StyledPublication = styled.li`
 const Publications = () => {
   const data = useStaticQuery(graphql`
     query {
-      publications: allMarkdownRemark(
-        filter: {
-          fileAbsolutePath: { regex: "/publications/" }
-          frontmatter: { showInPublications: { ne: false } }
-        }
-        sort: { fields: [frontmatter___date], order: DESC }
+      publications: allContentfulPublication(
+        filter: { visible: { eq: true } }
+        sort: { fields: date, order: DESC }
       ) {
         edges {
           node {
-            frontmatter {
-              title
-              conference
-              tech
-              external
+            title
+            conference
+            abstract {
+              childMarkdownRemark {
+                html
+              }
             }
-            html
+            link
           }
         }
       }
@@ -203,8 +201,7 @@ const Publications = () => {
   const publicationsToShow = showMore ? publications : firstSix;
 
   const publicationInner = node => {
-    const { frontmatter, html } = node;
-    const { github, external, title, tech } = frontmatter;
+    const { title, abstract, link, tech } = node;
 
     return (
       <div className="publication-inner">
@@ -214,14 +211,9 @@ const Publications = () => {
               <Icon name="Bookmark" />
             </div>
             <div className="publication-links">
-              {github && (
-                <a href={github} aria-label="GitHub Link" target="_blank" rel="noreferrer">
-                  <Icon name="GitHub" />
-                </a>
-              )}
-              {external && (
+              {link && (
                 <a
-                  href={external}
+                  href={link}
                   aria-label="External Link"
                   className="external"
                   target="_blank"
@@ -233,12 +225,15 @@ const Publications = () => {
           </div>
 
           <h3 className="publication-title">
-            <a href={external} target="_blank" rel="noreferrer">
+            <a href={link} target="_blank" rel="noreferrer">
               {title}
             </a>
           </h3>
 
-          <div className="publication-description" dangerouslySetInnerHTML={{ __html: html }} />
+          <div
+            className="publication-description"
+            dangerouslySetInnerHTML={{ __html: abstract.childMarkdownRemark.html }}
+          />
         </header>
 
         <footer>
