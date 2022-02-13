@@ -167,7 +167,7 @@ const StyledAward = styled.li`
 const Awards = () => {
   const data = useStaticQuery(graphql`
     query {
-      awards: allContentfulAwards(sort: { fields: date, order: DESC }) {
+      awards: allContentfulAward(sort: { fields: date, order: DESC }) {
         edges {
           node {
             title

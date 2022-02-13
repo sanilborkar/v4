@@ -6,6 +6,8 @@ import { srConfig } from '@config';
 import { KEY_CODES } from '@utils';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
+import { BLOCKS } from '@contentful/rich-text-types';
+import { renderRichText } from 'gatsby-source-contentful/rich-text';
 
 const StyledJobsSection = styled.section`
   max-width: 700px;
@@ -156,6 +158,13 @@ const StyledTabPanel = styled.div`
     }
   }
 
+  .location {
+    margin-bottom: 5px;
+    color: var(--light-slate);
+    font-family: var(--font-mono);
+    font-size: var(--fz-xs);
+  }
+
   .range {
     margin-bottom: 25px;
     color: var(--light-slate);
@@ -167,20 +176,18 @@ const StyledTabPanel = styled.div`
 const Jobs = () => {
   const data = useStaticQuery(graphql`
     query {
-      jobs: allMarkdownRemark(
-        filter: { fileAbsolutePath: { regex: "/jobs/" } }
-        sort: { fields: [frontmatter___date], order: DESC }
-      ) {
+      jobs: allContentfulExperience(sort: { fields: date, order: DESC }) {
         edges {
           node {
-            frontmatter {
-              title
-              company
-              location
-              range
-              url
+            title
+            company
+            location
+            url
+            description {
+              raw
             }
-            html
+            range
+            contentful_id
           }
         }
       }
@@ -242,6 +249,15 @@ const Jobs = () => {
     }
   };
 
+  const options = {
+    renderNode: {
+      // eslint-disable-next-line react/display-name
+      [BLOCKS.PARAGRAPH]: (node, children) => (
+        <div dangerouslySetInnerHTML={{ __html: children }} />
+      ),
+    },
+  };
+
   return (
     <StyledJobsSection id="jobs" ref={revealContainer}>
       <h2 className="numbered-heading">Where I’ve Worked</h2>
@@ -250,7 +266,7 @@ const Jobs = () => {
         <StyledTabList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
           {jobsData &&
             jobsData.map(({ node }, i) => {
-              const { company } = node.frontmatter;
+              const company = node.company;
               return (
                 <StyledTabButton
                   key={i}
@@ -272,8 +288,7 @@ const Jobs = () => {
         <StyledTabPanels>
           {jobsData &&
             jobsData.map(({ node }, i) => {
-              const { frontmatter, html } = node;
-              const { title, url, company, range } = frontmatter;
+              const { title, company, location, url, range, description } = node;
 
               return (
                 <CSSTransition key={i} in={activeTabId === i} timeout={250} classNames="fade">
@@ -294,9 +309,10 @@ const Jobs = () => {
                       </span>
                     </h3>
 
+                    <p className="location">{location}</p>
                     <p className="range">{range}</p>
 
-                    <div dangerouslySetInnerHTML={{ __html: html }} />
+                    <div>{description && renderRichText(description, options)}</div>
                   </StyledTabPanel>
                 </CSSTransition>
               );
