@@ -130,7 +130,7 @@ const StyledTableContainer = styled.div`
 `;
 
 const ArchivePage = ({ location, data }) => {
-  const projects = data.allMarkdownRemark.edges;
+  const projects = data.projects.edges;
   const revealTitle = useRef(null);
   const revealTable = useRef(null);
   const revealProjects = useRef([]);
@@ -162,7 +162,7 @@ const ArchivePage = ({ location, data }) => {
               <tr>
                 <th>Year</th>
                 <th>Title</th>
-                <th className="hide-on-mobile">Made at</th>
+                <th className="hide-on-mobile">Status</th>
                 <th className="hide-on-mobile">Built with</th>
                 <th>Link</th>
               </tr>
@@ -170,16 +170,10 @@ const ArchivePage = ({ location, data }) => {
             <tbody>
               {projects.length > 0 &&
                 projects.map(({ node }, i) => {
-                  const {
-                    date,
-                    github,
-                    external,
-                    ios,
-                    android,
-                    title,
-                    tech,
-                    company,
-                  } = node.frontmatter;
+                  const { date, source, link, title, tech, status } = node;
+                  const ios = '';
+                  const android = '';
+
                   return (
                     <tr key={i} ref={el => (revealProjects.current[i] = el)}>
                       <td className="overline year">{`${new Date(date).getFullYear()}`}</td>
@@ -187,7 +181,7 @@ const ArchivePage = ({ location, data }) => {
                       <td className="title">{title}</td>
 
                       <td className="company hide-on-mobile">
-                        {company ? <span>{company}</span> : <span>—</span>}
+                        {status ? <span>{status}</span> : <span></span>}
                       </td>
 
                       <td className="tech hide-on-mobile">
@@ -203,14 +197,14 @@ const ArchivePage = ({ location, data }) => {
 
                       <td className="links">
                         <div>
-                          {external && (
-                            <a href={external} aria-label="External Link">
-                              <Icon name="External" />
+                          {source && (
+                            <a href={source} aria-label="GitHub Link">
+                              <Icon name="GitHub" />
                             </a>
                           )}
-                          {github && (
-                            <a href={github} aria-label="GitHub Link">
-                              <Icon name="GitHub" />
+                          {link && (
+                            <a href={link} aria-label="External Link">
+                              <Icon name="External" />
                             </a>
                           )}
                           {ios && (
@@ -244,23 +238,15 @@ export default ArchivePage;
 
 export const pageQuery = graphql`
   {
-    allMarkdownRemark(
-      filter: { fileAbsolutePath: { regex: "/projects/" } }
-      sort: { fields: [frontmatter___date], order: DESC }
-    ) {
+    projects: allContentfulProject(sort: { fields: date, order: DESC }) {
       edges {
         node {
-          frontmatter {
-            date
-            title
-            tech
-            github
-            external
-            ios
-            android
-            company
-          }
-          html
+          title
+          tech
+          source
+          link
+          status
+          date
         }
       }
     }
