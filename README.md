@@ -8,7 +8,7 @@
   First iteration built with <a href="https://www.gatsbyjs.org/" target="_blank">Gatsby</a> and <a href="https://www.contenful.com/" target="_blank">Contentful</a>
 </p>
 <p align="center">
-  If you want a markdown data driven project, please check the <i>master</i> branch.
+  If you want a markdown data driven project, please check the <i>main</i> branch.
 </p>
 <!-- <p align="center">
   <a href="https://app.netlify.com/sites/brittanychiang/deploys" target="_blank">
