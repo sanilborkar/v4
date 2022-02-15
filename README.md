@@ -1,37 +1,48 @@
 <div align="center">
-  <img alt="Logo" src="https://raw.githubusercontent.com/bchiang7/v4/main/src/images/logo.png" width="100" />
+  <img alt="Logo" src="src/images/logo.png" width="100" />
 </div>
 <h1 align="center">
-  brittanychiang.com - v4
+  Portfolio Website - Version 1
 </h1>
 <p align="center">
-  The fourth iteration of <a href="https://brittanychiang.com" target="_blank">brittanychiang.com</a> built with <a href="https://www.gatsbyjs.org/" target="_blank">Gatsby</a> and hosted with <a href="https://www.netlify.com/" target="_blank">Netlify</a>
+  First iteration built with <a href="https://www.gatsbyjs.org/" target="_blank">Gatsby</a> and <a href="https://www.contenful.com/" target="_blank">Contentful</a>
 </p>
 <p align="center">
-  Previous iterations:
-  <a href="https://github.com/bchiang7/v1" target="_blank">v1</a>,
-  <a href="https://github.com/bchiang7/v2" target="_blank">v2</a>,
-  <a href="https://github.com/bchiang7/bchiang7.github.io" target="_blank">v3</a>
+  If you want a markdown data driven project, please check the <i>master</i> branch.
 </p>
-<p align="center">
+<!-- <p align="center">
   <a href="https://app.netlify.com/sites/brittanychiang/deploys" target="_blank">
     <img src="https://api.netlify.com/api/v1/badges/1963b488-7b78-48c9-9e2d-6fb5e47ab3af/deploy-status" alt="Netlify Status" />
   </a>
-</p>
+</p> -->
 
-![demo](https://raw.githubusercontent.com/bchiang7/v4/main/src/images/demo.png)
+![demo](src/images/demo.png)
 
 ## 🚨 Forking this repo (please read!)
 
-Many people have contacted me asking me if they can use this code for their own website, and the answer to that question is usually **yes, with attribution**.
+Yes, you can fork this repo.
 
-I value keeping my site open source, but as you all know, _**plagiarism is bad**_. It's always disheartening whenever I find that someone has copied my site without giving me credit. I spent a non-trivial amount of effort building and designing this iteration of my website, and I am proud of it! All I ask of you all is to not claim this effort as your own.
+**This project has been built and designed by [brittanychiang.com](https://brittanychiang.com).**
 
-Please also note that I did not build this site with the intention of it being a starter theme, so if you have questions about implementation, please refer to the [Gatsby docs](https://www.gatsbyjs.org/docs/).
+**Please give proper credit by linking back to [brittanychiang.com](https://brittanychiang.com). Thanks!**
 
-### TL;DR
+## Added Features
 
-Yes, you can fork this repo. Please give me proper credit by linking back to [brittanychiang.com](https://brittanychiang.com). Thanks!
+In addition to the [original repo](https://github.com/bchiang7/v4), the following features have been added:
+
+- Awards section
+- Publications section
+
+If you do not need any of these extra sections, please follow these steps:
+
+- Head over to the `src/config.js`, and you can remove the section you do not want from under `navLinks`. This will remove the section from the navigation bar.
+- Head over to the `src/pages/index.js`, and remove the concerned section tag from under `<Layout>` tag. This will remove the section from the page.
+
+If Gatsby complains because it is not able to fetch data from [Contentful](#contentful), it may be because the static query on the concerned sections page (under `src/components/sections`) is failing. If this is the case, please comment out or delete the said `.js` file from under the `src/components/sections`, and try again.
+
+## Contentful
+
+Before you start setting this project up, please read the documentation on how to set up Contentful [here](docs/contentful.md).
 
 ## 🛠 Installation & Set Up
 
