@@ -22,7 +22,7 @@
 
 Yes, you can fork this repo.
 
-**This project has been built and designed by [brittanychiang.com](https://brittanychiang.com).**
+**This project has been built and designed by [Brittany Chiang](https://brittanychiang.com).**
 
 **Please give proper credit by linking back to [brittanychiang.com](https://brittanychiang.com). Thanks!**
 
