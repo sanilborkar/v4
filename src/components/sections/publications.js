@@ -182,7 +182,7 @@ const Publications = () => {
   `);
 
   const [showMore, setShowMore] = useState(false);
-  const revealTitle = useRef(null);
+  const revealContainer = useRef(null);
   const revealArchiveLink = useRef(null);
   const revealPublications = useRef([]);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -192,7 +192,7 @@ const Publications = () => {
       return;
     }
 
-    sr.reveal(revealTitle.current, srConfig());
+    sr.reveal(revealContainer.current, srConfig());
     sr.reveal(revealArchiveLink.current, srConfig());
     revealPublications.current.forEach((ref, i) => sr.reveal(ref, srConfig(i * 100)));
   }, []);
@@ -255,8 +255,8 @@ const Publications = () => {
   };
 
   return (
-    <StyledPublicationsSection id="publications">
-      <h2 ref={revealTitle}>Publications</h2>
+    <StyledPublicationsSection id="publications" ref={revealContainer}>
+      <h2 className="numbered-heading">Publications</h2>
 
       <ul className="publications-grid">
         {prefersReducedMotion ? (
