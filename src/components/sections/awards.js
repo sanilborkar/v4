@@ -184,7 +184,7 @@ const Awards = () => {
   `);
 
   const [showMore, setShowMore] = useState(false);
-  const revealTitle = useRef(null);
+  const revealContainer = useRef(null);
   const revealArchiveLink = useRef(null);
   const revealAwards = useRef([]);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -194,7 +194,7 @@ const Awards = () => {
       return;
     }
 
-    sr.reveal(revealTitle.current, srConfig());
+    sr.reveal(revealContainer.current, srConfig());
     sr.reveal(revealArchiveLink.current, srConfig());
     revealAwards.current.forEach((ref, i) => sr.reveal(ref, srConfig(i * 100)));
   }, []);
@@ -268,8 +268,8 @@ const Awards = () => {
   };
 
   return (
-    <StyledAwardsSection id="awards">
-      <h2 ref={revealTitle}>Awards</h2>
+    <StyledAwardsSection id="awards" ref={revealContainer}>
+      <h2 className="numbered-heading">Awards</h2>
 
       <ul className="awards-grid">
         {prefersReducedMotion ? (
